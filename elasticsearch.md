@@ -241,3 +241,123 @@ lte小于等于，lt小于
 
 智能分词，ik_smart
 
+analyzer：ik_max_word 
+
+```
+}
+PUT /user
+{
+  "mappings": {
+    "user":{
+      "properties":{
+        "name":{"type":"keyword"},
+        "age":{"type":"integer"},
+        "bir":{"type":"date"},
+        "content":{"type":"text",
+        "analyzer":"ik_max_word",
+        "search_analyser":"ik_max_word"
+        }
+      }
+    }
+  }
+}
+```
+
+**扩展词典**
+
+//配置
+
+vi  ik/config/IKAnalyzer.cfg.xml
+
+**远程字典**
+
+### 11.过滤查询
+
+查询默认计算每个返回文档的得分，然后根据得分排序
+
+过滤只会筛选出符合的文档，并不会计算得分。并且可以缓存文档。性能会快一些
+
+先过滤，再查询，自动缓存经常使用的过滤器。
+
+//范围过滤
+
+```
+ GET /user/user/_search
+ {
+   "query": {
+     "bool": {
+       "must": [
+         {"term": {
+           "content": {
+             "value": "张"
+           }
+         }}
+       ],
+       "filter": {
+         "range": {
+           "age": {
+             "gte": 21,
+             "lte": 28
+           }
+         }
+       }
+     }
+   }
+ }
+```
+
+//关键词过滤
+
+```
+ GET /user/user/_search
+ {
+   "query": {
+     "bool": {
+       "must": [
+         {"term": {
+           "content": {
+             "value": "张"
+           }
+         }}
+       ],
+       "filter": {
+         "terms": {
+           "content": ["蓝瘦"]
+         }
+       }
+     }
+   }
+ }
+```
+
+//过滤存在指定字段，获取字段不为空的索引记录
+
+```
+ GET /user/user/_search
+ {
+   "query": {
+     "bool": {
+       "must": [
+         {"term": {
+           "content": {
+             "value": "张"
+           }
+         }}
+       ],
+       "filter": {
+         "exists": {
+           "field": "name"
+         }
+       }
+     }
+   }
+ }
+```
+
+ids过滤
+
+### 12.springboot data操作
+
+RestHighLevelClient:操作更复杂查询，高亮查询，指定条件查询
+
+ElasticSearchRepository：接口面向对象，提供crud方法
