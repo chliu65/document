@@ -95,3 +95,8 @@ worker工作方式
 ![image-20191225183501109](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20191225183501109.png)
 
 ![image-20191225183602380](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20191225183602380.png)
+
+
+
+
+
